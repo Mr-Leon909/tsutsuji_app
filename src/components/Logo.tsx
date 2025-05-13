@@ -1,8 +1,13 @@
+import { useLocation } from 'react-router-dom';
+
 interface LogoProps {
   variant?: 'default' | 'small';
 }
 
 export default function Logo({ variant = 'default' }: LogoProps) {
+  const location = useLocation();
+  const logoUrl = '/TSUTSUjiロゴ.png';
+
   // デフォルトサイズのロゴ
   if (variant === 'default') {
     return (
@@ -15,7 +20,7 @@ export default function Logo({ variant = 'default' }: LogoProps) {
   // 小さいサイズのロゴ（ヘッダー用など）
   return (
     <div className="flex items-center">
-      <img src="../TSUTSUjiロゴ.png" alt="TSUTSUJI" className="w-20 h-20" />
+      <img src={logoUrl} alt="TSUTSUJI" className="w-20 h-20" />
     </div>
   );
 }
