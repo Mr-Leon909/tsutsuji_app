@@ -4,6 +4,7 @@ import { useDropzone } from 'react-dropzone';
 import { X, ArrowRight, Image, Film } from 'lucide-react';
 import { useAuthStore } from '../store/authStore';
 import { usePostStore } from '../store/postStore';
+import { supabase } from '../lib/supabase';
 import BottomNavbar from '../components/BottomNavbar';
 
 // アップロード画面のステップ
@@ -82,18 +83,34 @@ export default function CreatePostPage() {
     setError(null);
     
     try {
-      // 実際のアプリケーションでは、ここでSupabase Storageなどにファイルをアップロードする処理を行います
-      // このデモでは、プレビューURLをそのまま使用します
-      
       // キャプションの文字数制限
       if (caption.length > 2000) {
         setError('キャプションは2000文字以内で入力してください');
         setIsUploading(false);
         return;
       }
-      
+
+      // ファイル名を生成（一意のIDを付与）
+      const fileExt = selectedFile.name.split('.').pop();
+      const fileName = `${Math.random().toString(36).substring(2)}.${fileExt}`;
+      const filePath = `${user.id}/${fileName}`;
+
+      // Supabase Storageにファイルをアップロード
+      const { error: uploadError, data } = await supabase.storage
+        .from('media')
+        .upload(filePath, selectedFile);
+
+      if (uploadError) {
+        throw uploadError;
+      }
+
+      // 公開URLを取得
+      const { data: { publicUrl } } = supabase.storage
+        .from('media')
+        .getPublicUrl(filePath);
+
       // 投稿の作成
-      const postId = await createPost(user.id, preview!, isVideo, caption || null);
+      const postId = await createPost(user.id, publicUrl, isVideo, caption || null);
       
       if (postId) {
         // 投稿に成功したらタイムラインページに移動
