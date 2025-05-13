@@ -15,7 +15,7 @@ export default function Logo({ variant = 'default' }: LogoProps) {
   // 小さいサイズのロゴ（ヘッダー用など）
   return (
     <div className="flex items-center">
-      <img src="../birthday_project＿TOPページ.png" alt="TSUTSUJI" className="w-full h-full" />
+      <img src="../birthday_project＿TOPページ.png" alt="TSUTSUJI" className="w-1/2 h-1/2" />
     </div>
   );
 }
