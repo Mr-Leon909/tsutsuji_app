@@ -96,7 +96,7 @@ export default function CreatePostPage() {
       const filePath = `${user.id}/${fileName}`;
 
       // Supabase Storageにファイルをアップロード
-      const { error: uploadError, data } = await supabase.storage
+      const { error: uploadError } = await supabase.storage
         .from('media')
         .upload(filePath, selectedFile);
 
